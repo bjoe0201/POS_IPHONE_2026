@@ -13,6 +13,11 @@ enum DateBoundary {
     /// 今日本機 00:00 的毫秒 epoch。
     static func todayStart() -> Int64 { startOfDay(Date.nowMillis) }
 
+    /// 給定毫秒所屬日的 23:59:59.999 毫秒 epoch。
+    static func endOfDay(_ millis: Int64) -> Int64 {
+        nextDayStart(millis) - 1
+    }
+
     /// 給定毫秒所屬日的「隔日」本機 00:00 毫秒 epoch。
     static func nextDayStart(_ millis: Int64) -> Int64 {
         let start = startOfDay(millis)
