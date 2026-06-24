@@ -348,6 +348,27 @@ final class OrderViewModel: ObservableObject {
 
     func clearError() { errorMessage = nil }
 
+    /// 結帳成功後處理收據：依設定自動存 PDF 到資料夾、或 AirPrint 列印。
+    /// 對應 Android 結帳時的 PDF 收據 / 印表機列印（iOS 以 AirPrint + 資料夾 bookmark 實作）。
+    func handleReceipt(_ result: CheckoutResult) {
+        let receipt = PdfReportBuilder.ReceiptData(
+            orderId: result.orderId,
+            tableName: result.tableName,
+            createdAt: result.createdAt,
+            remark: result.remark,
+            items: result.items.map { ($0.name, $0.quantity, $0.price) },
+            total: result.total
+        )
+        if settings.pdfPrinterEnabled && !settings.pdfPrinterTreeUri.isEmpty {
+            let data = PdfReportBuilder.receiptPDF(receipt)
+            FolderBookmark.write(data, filename: PdfReportBuilder.receiptFilename(receipt),
+                                 token: settings.pdfPrinterTreeUri)
+        }
+        if settings.printCheckoutEnabled {
+            Exporting.printPDF(PdfReportBuilder.receiptPDF(receipt), jobName: "收據 #\(result.orderId)")
+        }
+    }
+
     private func resolveGroupName(_ code: String) -> String {
         groups.first { $0.code == code }?.name ?? code
     }

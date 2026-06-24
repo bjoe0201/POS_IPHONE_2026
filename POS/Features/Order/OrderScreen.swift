@@ -62,7 +62,7 @@ struct OrderScreen: View {
                     SoundEffects.playPaymentSuccess()
                     Haptics.paymentSuccess(vm.hapticEnabled)
                     showCheckout = false
-                    // PDF 收據 / AirPrint 將於 M6 / M7 接上（pdfPrinterEnabled / printCheckoutEnabled）。
+                    vm.handleReceipt(result)   // 依設定存收據 PDF / AirPrint 列印
                 }
             }
         }

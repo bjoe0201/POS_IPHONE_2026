@@ -35,7 +35,7 @@ struct HomeView: View {
         case .menu:        MenuManagementScreen(container: container)
         case .table:       TableSettingScreen(container: container)
         case .report:      ReportScreen(container: container, onGoSettings: { selected = .settings })
-        case .settings:    SettingsScreen()
+        case .settings:    SettingsScreen(container: container)
         }
     }
 
