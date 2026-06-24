@@ -1,0 +1,19 @@
+# Xcode / SPM build artifacts
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+
+# 由 XcodeGen 從 project.yml 產生，不納入版控（執行 `xcodegen generate` 重建）
+*.xcodeproj
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# 私密 / 簽章
+*.mobileprovision
+*.p12
+*.cer
+ExportOptions.plist
