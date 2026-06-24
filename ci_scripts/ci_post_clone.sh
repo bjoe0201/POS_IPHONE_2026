@@ -14,14 +14,15 @@ echo "==> Generating Xcode project from project.yml"
 cd "$CI_PRIMARY_REPOSITORY_PATH"
 xcodegen generate
 
-# Xcode Cloud 關閉「自動」套件解析，且要求預先存在 Package.resolved。
-# 由於 .xcodeproj（含其 Package.resolved）未入版控，這裡明確解析一次，
-# 把 Package.resolved 寫到 Xcode Cloud 期望的路徑（專案內 workspace 的 swiftpm 目錄）。
-echo "==> Resolving Swift Package dependencies (writes Package.resolved)"
-xcodebuild -resolvePackageDependencies \
-  -project POS_IPHONE_2026.xcodeproj \
-  -scheme POS
+# Xcode Cloud 關閉「自動」套件解析，且要求預先存在 Package.resolved；
+# 其沙箱在 post-clone 不允許網路解析。由於 .xcodeproj（含其 Package.resolved）
+# 未入版控、且 xcodegen generate 會清掉 workspace，故改為：把版控中的
+# ci_scripts/Package.resolved 複製到 Xcode Cloud 期望的路徑（generate 之後）。
+echo "==> Installing committed Package.resolved into generated workspace"
+SWIFTPM_DIR="POS_IPHONE_2026.xcodeproj/project.xcworkspace/xcshareddata/swiftpm"
+mkdir -p "$SWIFTPM_DIR"
+cp "ci_scripts/Package.resolved" "$SWIFTPM_DIR/Package.resolved"
 
-echo "==> Done. Project + Package.resolved generated:"
+echo "==> Done. Project + Package.resolved in place:"
 ls -la "$CI_PRIMARY_REPOSITORY_PATH"/POS_IPHONE_2026.xcodeproj
-ls -la "$CI_PRIMARY_REPOSITORY_PATH"/POS_IPHONE_2026.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/ 2>/dev/null || true
+ls -la "$CI_PRIMARY_REPOSITORY_PATH/$SWIFTPM_DIR"

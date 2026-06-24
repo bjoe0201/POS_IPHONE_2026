@@ -42,6 +42,8 @@ Packages/
 Package.pins
 # Package.resolved 由 SPM 自動產生；本專案 .xcodeproj 不入庫，故一併排除
 Package.resolved
+# 例外：Xcode Cloud 需要預先存在的 Package.resolved，保留一份版控副本供 CI 複製
+!ci_scripts/Package.resolved
 
 # ---------- CocoaPods（本專案未使用，預留保險） ----------
 Pods/
