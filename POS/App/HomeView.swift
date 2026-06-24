@@ -32,8 +32,8 @@ struct HomeView: View {
         switch selected {
         case .order:       OrderScreen(container: container, onGoSettings: { selected = .settings })
         case .reservation: ReservationScreen()
-        case .menu:        MenuManagementScreen()
-        case .table:       TableSettingScreen()
+        case .menu:        MenuManagementScreen(container: container)
+        case .table:       TableSettingScreen(container: container)
         case .report:      ReportScreen(onGoSettings: { selected = .settings })
         case .settings:    SettingsScreen()
         }
