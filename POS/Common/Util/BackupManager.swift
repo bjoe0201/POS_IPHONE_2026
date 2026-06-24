@@ -41,7 +41,7 @@ enum BackupManager {
         let ts = timestamp()
         let zipURL = tmp.appendingPathComponent("POS備份-\(ts).zip")
         try? FileManager.default.removeItem(at: zipURL)
-        guard let archive = Archive(url: zipURL, accessMode: .create) else { throw BackupError.archiveCreate }
+        let archive = try Archive(url: zipURL, accessMode: .create)
         try archive.addEntry(with: dbEntryName, fileURL: dbCopy)
         try? FileManager.default.removeItem(at: dbCopy)
         return zipURL
@@ -67,7 +67,7 @@ enum BackupManager {
         let needsAccess = url.startAccessingSecurityScopedResource()
         defer { if needsAccess { url.stopAccessingSecurityScopedResource() } }
 
-        guard let archive = Archive(url: url, accessMode: .read) else { throw BackupError.archiveOpen }
+        let archive = try Archive(url: url, accessMode: .read)
         let entry = archive.first { $0.path == dbEntryName }
             ?? archive.first { $0.path.hasSuffix(dbEntryName) || $0.path.hasSuffix(".sqlite") || $0.path.hasSuffix(".db") }
         guard let dbEntry = entry else { throw BackupError.noDatabaseEntry }

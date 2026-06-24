@@ -134,6 +134,6 @@ final class ReservationViewModel: ObservableObject {
     }
 
     // MARK: - CRUD
-    func upsert(_ reservation: Reservation) { try? reservationRepo.upsert(reservation) }
+    func upsert(_ reservation: Reservation) { _ = try? reservationRepo.upsert(reservation) }
     func delete(_ reservation: Reservation) { try? reservationRepo.delete(reservation) }
 }

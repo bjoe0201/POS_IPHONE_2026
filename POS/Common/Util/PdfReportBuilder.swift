@@ -21,6 +21,8 @@ enum PdfReportBuilder {
     }
 
     // MARK: - 報表 PDF
+    /// 由 @MainActor 的 ReportViewModel 取值，故標記 @MainActor（只在畫面主執行緒呼叫）。
+    @MainActor
     static func reportPDF(vm: ReportViewModel, includeDetails: Bool) -> Data {
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageW, height: pageH))
         let dtf = DateFormatter(); dtf.dateFormat = "yyyy-MM-dd HH:mm"

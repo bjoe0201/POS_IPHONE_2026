@@ -266,9 +266,9 @@ final class OrderViewModel: ObservableObject {
 
         do {
             let createdAt = (date == today) ? Date.nowMillis : date
-            let orderId = order?.id ?? (try orderRepo.createOrder(tableId: tableId,
-                                                                  tableName: table.tableName,
-                                                                  createdAt: createdAt))
+            let orderId = try order?.id ?? orderRepo.createOrder(tableId: tableId,
+                                                                 tableName: table.tableName,
+                                                                 createdAt: createdAt)
             try orderRepo.addOrUpdateItem(orderId: orderId,
                                           menuItemId: menuItem.id ?? 0,
                                           name: menuItem.name,

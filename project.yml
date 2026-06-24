@@ -1,6 +1,6 @@
 name: POS_IPHONE_2026
 options:
-  bundleIdPrefix: com.bjoe
+  bundleIdPrefix: b2p.idv.tw
   deploymentTarget:
     iOS: "15.0"
   createIntermediateGroups: true
@@ -28,13 +28,14 @@ targets:
         product: ZIPFoundation
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.bjoe.pos
+        PRODUCT_BUNDLE_IDENTIFIER: b2p.idv.tw.pos
         PRODUCT_NAME: 火鍋POS
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        CURRENT_PROJECT_VERSION: "2"
         SWIFT_VERSION: "5.7"
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         DEVELOPMENT_TEAM: ""
         CODE_SIGN_STYLE: Automatic
         INFOPLIST_KEY_CFBundleDisplayName: 火鍋POS
