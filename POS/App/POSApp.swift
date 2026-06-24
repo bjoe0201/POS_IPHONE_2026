@@ -10,6 +10,7 @@ struct POSApp: App {
             RootView()
                 .environmentObject(container)
                 .environmentObject(container.settings)
+                .environmentObject(container.thermalPrinter)
         }
         .onChange(of: scenePhase) { phase in
             // 進入背景時自動備份（對應 Android onPause 觸發備份）。

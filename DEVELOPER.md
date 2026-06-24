@@ -13,7 +13,7 @@
 | 最低系統 | iOS 15（iPhone 8 可用） |
 | 資料庫 | [GRDB.swift](https://github.com/groue/GRDB.swift)（SQLite） |
 | 設定儲存 | UserDefaults（封裝為 `SettingsStore`） |
-| 列印 | AirPrint（`UIPrintInteractionController`）+ PDF（`UIGraphicsPDFRenderer`） |
+| 列印 | AirPrint（`UIPrintInteractionController`）+ PDF（`UIGraphicsPDFRenderer`）+ 藍牙熱感機（芯烨 XYSDK / BLE，僅文字模式） |
 | 壓縮備份 | [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) |
 | DI | 輕量手動容器 `AppContainer` + SwiftUI 環境注入 |
 | 專案產生 | [XcodeGen](https://github.com/yonbergman/xcodegen)（`project.yml`） |
@@ -51,7 +51,7 @@ open POS_IPHONE_2026.xcodeproj
 |------|----|------|
 | `PRODUCT_BUNDLE_IDENTIFIER` | `b2p.idv.tw.pos` | App 唯一識別碼（需在 Apple Developer 後台註冊） |
 | `MARKETING_VERSION` | `1.0.0` | 對外版本號 |
-| `CURRENT_PROJECT_VERSION` | `2` | Build 號，**每次上傳 TestFlight 需遞增** |
+| `CURRENT_PROJECT_VERSION` | `3` | Build 號，**每次上傳 TestFlight 需遞增** |
 | `ASSETCATALOG_COMPILER_APPICON_NAME` | `AppIcon` | App 圖示資產名稱 |
 
 ---
@@ -117,6 +117,25 @@ PLANS/PORTING_PLAN.md             # 移植計畫與里程碑
 
 ---
 
+## 藍牙熱感印表機（芯烨 XP-Q90EC）
+
+僅支援 **BLE + 文字（ESC/POS）模式**；不含 WiFi、點陣圖、標籤。整合規劃見 [`PLANS/PRINTER_XP-Q90EC_iOS.md`](PLANS/PRINTER_XP-Q90EC_iOS.md)。
+
+```
+POS/ThirdParty/
+  XYSDK/                       # 廠商 SDK（不入版控 sources，靠連結與標頭搜尋路徑使用）
+    XYSDK.a                    # Objective-C 靜態庫（i386/armv7/x86_64/arm64）
+    include/XYSDK/*.h          # SDK 標頭
+  Bridge/
+    XYPrinterBridge.{h,m}      # 薄橋接：固定方法名、回呼統一切回主執行緒
+    POS-Bridging-Header.h      # Swift 橋接標頭（只 import 橋接層 + PosCommand）
+POS/Common/Util/ThermalPrinterManager.swift   # @Published 狀態、掃描/連線/測試列印、記住裝置
+```
+
+`project.yml` 對應設定：`framework: XYSDK.a`（embed:false）、連結 `CoreBluetooth/SystemConfiguration/CFNetwork`、`OTHER_LDFLAGS: -ObjC`、`HEADER_SEARCH_PATHS` 指向 `include/XYSDK`、`SWIFT_OBJC_BRIDGING_HEADER` 指向橋接標頭、藍牙權限字串 `NSBluetoothAlwaysUsageDescription`。
+
+> Swift 匯入 Objective-C 時會改名（如 `writeData:`→`write(_:)`、`XYdidFailToConnect…`→`xyBridgeDidFail(toConnect:…)`），橋接層即是為了把這些介面收斂在可控的一處。
+
 ## App 圖示
 
 `POS/Resources/Assets.xcassets/AppIcon.appiconset/`，採單一 1024×1024（無 alpha 透明，符合 App Store 規定），Xcode 建置時自動產生其餘尺寸。更換圖示只需替換 `AppIcon1024.png`。
@@ -142,3 +161,5 @@ PLANS/PORTING_PLAN.md             # 移植計畫與里程碑
 - **長按手勢與捲動**：記帳頁菜單卡的 0 距離長按連續加減，與菜單格捲動可能互搶，需實機微調（必要時改 `.onLongPressGesture` 或 simultaneous gesture）。
 - **ZIPFoundation API 版本**：`Archive` 採 throwing 初始化；若日後鎖定不同版本需留意 API 差異。
 - 跨平台備份互通（見上）為未來功能。
+- **熱感印表機只能在實機測試**：`XYSDK.a` 的 `arm64` 切片是 iOS 裝置版，無 `arm64-simulator` 切片，故 Apple Silicon Mac 的模擬器**無法連結**（`ld: building for 'iOS-simulator', but linking in object file … built for 'iOS'`）。請以 `generic/platform=iOS` 建置並在實機（如 iPhone 8）測試。Intel Mac 的模擬器可用 `x86_64` 切片。
+- **熱感印表機繁體中文**：目前送 ASCII 測試頁；中文需依印表機字碼表（Big5/GBK）處理，屬 P2，若亂碼再評估點陣方案。

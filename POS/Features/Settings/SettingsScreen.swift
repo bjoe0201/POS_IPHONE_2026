@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 /// 設定。對應 Android SettingsScreen（手機版以 Form 呈現各區塊）。
 struct SettingsScreen: View {
     @EnvironmentObject private var settings: SettingsStore
+    @EnvironmentObject private var printer: ThermalPrinterManager
     @StateObject private var vm: SettingsViewModel
 
     @State private var showPinSheet = false
@@ -26,6 +27,7 @@ struct SettingsScreen: View {
                 tabsSection
                 orderOpsSection
                 reservationSection
+                thermalPrinterSection
                 printerSection
                 pdfSection
                 backupSection
@@ -108,10 +110,55 @@ struct SettingsScreen: View {
         ), displayedComponents: .hourAndMinute)
     }
 
+    // MARK: - 熱感印表機（藍牙 BLE）
+    private var thermalPrinterSection: some View {
+        Section("熱感印表機（藍牙）") {
+            if printer.isConnected {
+                HStack {
+                    Image(systemName: "printer.fill").foregroundColor(Theme.success)
+                    Text("已連線：\(printer.savedName ?? "印表機")")
+                        .font(.footnote).foregroundColor(Theme.textSub)
+                    Spacer()
+                    Button("中斷") { printer.disconnect() }.font(.caption).foregroundColor(Theme.error)
+                }
+                Button("測試列印") { printer.printTest() }
+                Button("忘記此裝置") { printer.forget() }.foregroundColor(Theme.error)
+            } else {
+                if let name = printer.savedName {
+                    Text("已記住：\(name)（不在範圍或未開機時無法連線）")
+                        .font(.footnote).foregroundColor(Theme.textMuted)
+                }
+                Button(printer.state == .scanning ? "偵測中…停止" : "偵測藍牙印表機") {
+                    if printer.state == .scanning { printer.stopScan() } else { printer.startScan() }
+                }
+                ForEach(printer.devices) { device in
+                    Button {
+                        printer.connect(device)
+                    } label: {
+                        HStack {
+                            Image(systemName: "printer").foregroundColor(Theme.textSub)
+                            Text(device.name).foregroundColor(Theme.text)
+                            Spacer()
+                            Text("\(device.rssi) dBm").font(.caption).foregroundColor(Theme.textMuted)
+                        }
+                    }
+                }
+                if printer.state == .scanning && printer.devices.isEmpty {
+                    Text("搜尋中…請確認印表機已開機並開啟藍牙。")
+                        .font(.footnote).foregroundColor(Theme.textMuted)
+                }
+            }
+            if let msg = printer.statusMessage {
+                Text(msg).font(.footnote).foregroundColor(Theme.textSub)
+            }
+        }
+        .tint(Theme.accent)
+    }
+
     // MARK: - 列印（AirPrint）
     private var printerSection: some View {
         Section("列印（AirPrint）") {
-            Text("iOS 透過 AirPrint 列印，支援任何 AirPrint 印表機；USB/藍牙熱感機為 Android 限定。")
+            Text("未連線熱感印表機時，可用 AirPrint 列印至任何相容印表機。")
                 .font(.footnote).foregroundColor(Theme.textMuted)
             Toggle("收款後自動列印收據", isOn: $settings.printCheckoutEnabled).tint(Theme.accent)
             Button("列印測試頁") {

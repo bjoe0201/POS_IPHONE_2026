@@ -105,7 +105,7 @@
 
 ## 8. 建議里程碑（待你同意後再動工）
 
-- **P1**：把 SDK 與 bridging 接起來，能編譯；設定頁「印表機」能 **掃描 + 連線 + 測試列印**（先印英數/金額一行）。
+- **P1**（✅ 已完成，待實機驗證列印）：SDK + Objective-C 薄橋接（`XYPrinterBridge`）+ `ThermalPrinterManager` 接好，`generic/platform=iOS` 建置成功；設定頁「熱感印表機（藍牙）」可 **偵測 + 連線 + 測試列印**（ASCII 測試頁），並記住所選裝置。<br>⚠️ 實機驗證：`XYSDK.a` 無 arm64-simulator 切片，Apple Silicon 模擬器無法連結，需用實機（iPhone 8）。
 - **P2**：以 `PosCommand` 文字版組**收款收據**（桌號、品項、金額、合計、切紙），接上「收款後自動列印」；實機驗證中文。
 - **P3**：選定裝置記憶（UserDefaults）、斷線重連、列印路由（有熱感機走 BLE，否則 AirPrint）。
 

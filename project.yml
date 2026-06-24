@@ -21,23 +21,47 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: POS
+        excludes:
+          - "ThirdParty/XYSDK/**"
     dependencies:
       - package: GRDB
         product: GRDB
       - package: ZIPFoundation
         product: ZIPFoundation
+      # 芯烨 XP-Q90EC 熱感印表機靜態庫（Objective-C），僅用 BLE + 文字模式
+      - framework: POS/ThirdParty/XYSDK/XYSDK.a
+        embed: false
+      # XYSDK 文件指定需連結的系統框架
+      - sdk: CoreBluetooth.framework
+      - sdk: SystemConfiguration.framework
+      - sdk: CFNetwork.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: b2p.idv.tw.pos
         PRODUCT_NAME: 火鍋POS
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "2"
+        CURRENT_PROJECT_VERSION: "3"
         SWIFT_VERSION: "5.7"
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         DEVELOPMENT_TEAM: ""
         CODE_SIGN_STYLE: Automatic
+        # Objective-C 橋接：讓 Swift 呼叫 XYSDK
+        SWIFT_OBJC_BRIDGING_HEADER: POS/ThirdParty/Bridge/POS-Bridging-Header.h
+        HEADER_SEARCH_PATHS:
+          - "$(inherited)"
+          - "$(SRCROOT)/POS/ThirdParty/XYSDK/include/XYSDK"
+        LIBRARY_SEARCH_PATHS:
+          - "$(inherited)"
+          - "$(SRCROOT)/POS/ThirdParty/XYSDK"
+        # 靜態庫含 Objective-C category，需 -ObjC 才能正確載入類別
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "-ObjC"
+        # 藍牙權限說明（連線熱感印表機列印收據）
+        INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: "需要藍牙以連線熱感印表機列印收據與報表。"
+        INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription: "需要藍牙以連線熱感印表機列印收據與報表。"
         INFOPLIST_KEY_CFBundleDisplayName: 火鍋POS
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES

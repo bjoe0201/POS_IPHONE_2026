@@ -6,6 +6,7 @@ import Combine
 final class AppContainer: ObservableObject {
     let database: AppDatabase
     let settings: SettingsStore
+    let thermalPrinter: ThermalPrinterManager
 
     let menuGroupRepository: MenuGroupRepository
     let menuRepository: MenuRepository
@@ -23,6 +24,7 @@ final class AppContainer: ObservableObject {
         }
         self.database = db
         self.settings = SettingsStore()
+        self.thermalPrinter = ThermalPrinterManager()
 
         let queue = db.dbQueue
         self.menuGroupRepository = MenuGroupRepository(dbQueue: queue)
