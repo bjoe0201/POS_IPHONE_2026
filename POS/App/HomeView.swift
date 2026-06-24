@@ -30,7 +30,7 @@ struct HomeView: View {
     @ViewBuilder
     private var content: some View {
         switch selected {
-        case .order:       OrderScreen(onGoSettings: { selected = .settings })
+        case .order:       OrderScreen(container: container, onGoSettings: { selected = .settings })
         case .reservation: ReservationScreen()
         case .menu:        MenuManagementScreen()
         case .table:       TableSettingScreen()

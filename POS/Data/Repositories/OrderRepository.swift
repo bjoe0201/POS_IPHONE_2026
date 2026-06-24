@@ -48,6 +48,32 @@ final class OrderRepository {
             .eraseToAnyPublisher()
     }
 
+    /// 各桌（OPEN 訂單）目前未結金額 [tableId: total]。
+    /// 對應 Android 以 flatMapLatest + combine 動態計算 openOrderTotals，
+    /// 此處改用單一 GROUP BY 查詢，較有效率。
+    func openOrderTotalsPublisher() -> AnyPublisher<[Int64: Double], Error> {
+        ValueObservation
+            .tracking { db -> [Int64: Double] in
+                let rows = try Row.fetchAll(db, sql: """
+                    SELECT o.tableId AS tableId,
+                           COALESCE(SUM(oi.price * oi.quantity), 0) AS total
+                    FROM orders o
+                    JOIN order_items oi ON oi.orderId = o.id
+                    WHERE o.status = 'OPEN'
+                    GROUP BY o.tableId
+                    """)
+                var map: [Int64: Double] = [:]
+                for row in rows {
+                    let tableId: Int64 = row["tableId"]
+                    let total: Double = row["total"]
+                    if total > 0 { map[tableId] = total }
+                }
+                return map
+            }
+            .publisher(in: dbQueue, scheduling: .immediate)
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Writes
 
     @discardableResult
