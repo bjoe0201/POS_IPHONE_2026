@@ -1,19 +1,118 @@
-# Xcode / SPM build artifacts
+# =====================================================================
+#  POS_IPHONE_2026 — .gitignore（適用公開發行）
+#  原則：原始碼與 project.yml 入庫；建置產物、簽章、密鑰、使用者資料一律排除
+# =====================================================================
+
+# ---------- Xcode 使用者 / 工作區設定 ----------
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ---------- 建置產物 ----------
 build/
 DerivedData/
-*.xcuserstate
-xcuserdata/
-.DS_Store
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.app
+*.xcarchive
+timeline.xctimeline
+playground.xcworkspace
 
-# 由 XcodeGen 從 project.yml 產生，不納入版控（執行 `xcodegen generate` 重建）
+# ---------- XcodeGen 產生物（由 project.yml 重建，不入庫） ----------
 *.xcodeproj
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
 
-# Swift Package Manager
+# ---------- Swift Package Manager ----------
+.build/
 .swiftpm/
+Packages/
+Package.pins
+# Package.resolved 由 SPM 自動產生；本專案 .xcodeproj 不入庫，故一併排除
 Package.resolved
 
-# 私密 / 簽章
+# ---------- CocoaPods（本專案未使用，預留保險） ----------
+Pods/
+*.podspec.json
+
+# ---------- Carthage（未使用，預留保險） ----------
+Carthage/Build/
+Carthage/Checkouts/
+
+# ---------- fastlane（未使用，預留保險） ----------
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# =====================================================================
+#  簽章 / 憑證 / 密鑰（嚴禁提交）
+# =====================================================================
 *.mobileprovision
+*.provisionprofile
 *.p12
+*.pfx
 *.cer
+*.certSigningRequest
+*.p8
+*.keystore
+*.jks
 ExportOptions.plist
+exportOptions.plist
+
+# ---------- 環境變數 / 秘密設定 ----------
+.env
+.env.*
+Secrets.swift
+Secrets.xcconfig
+*.secret.xcconfig
+GoogleService-Info.plist
+
+# =====================================================================
+#  本地備份 / 匯出資料（POS 營運資料，不應公開）
+# =====================================================================
+*.zip
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+/backups/
+/exports/
+
+# ---------- Log / 暫存 ----------
+*.log
+*.bak
+*.tmp
+*.swp
+*~
+
+# ---------- IDE ----------
+.idea/
+.vscode/
+
+# ---------- OS ----------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---------- AI / 開發工具本地設定 ----------
+.claude/
+.cursor/
+.aider*
