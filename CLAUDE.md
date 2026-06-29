@@ -60,9 +60,21 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 完整步驟見 `DEVELOPER.md`。關鍵：
 
 - 需付費 Apple Developer Program；先在 Developer 後台註冊 App ID `b2p.idv.tw.pos`，再於 App Store Connect 建立 App（填 SKU）。
-- Xcode：Signing & Capabilities 勾自動簽章、選 Team；裝置選 `Any iOS Device (arm64)` → Archive → Distribute → Upload。
 - App 圖示為單一 1024×1024、**無 alpha**（`POS/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png`），其餘尺寸由 Xcode 產生。
 - 出口合規：本 App 僅用 HTTPS 與系統 SHA-256（豁免），選「否，不使用非豁免加密」。
+
+### 自動發佈（Xcode Cloud CI/CD，主要方式）
+
+GitHub repo **已連接 Xcode Cloud**，採 CI/CD 自動建置並發佈到 TestFlight：
+
+- **觸發**：push 到 `main`（或設定的目標分支）即自動觸發 Xcode Cloud workflow → 自動 Archive → 上傳 TestFlight。
+- **發版步驟**：改完程式 → 遞增 `project.yml` 的 `CURRENT_PROJECT_VERSION`（必遞增）／必要時調 `MARKETING_VERSION` → `xcodegen generate` → 更新 `CHANGELOG.md` → `git push`，其餘交給 Xcode Cloud。
+- **CI 鉤子**：`ci_scripts/ci_post_clone.sh`（clone 後 `brew install xcodegen` → `xcodegen generate` → 複製版控副本 `ci_scripts/Package.resolved` 到 workspace）。詳見 `DEVELOPER.md` 的「Xcode Cloud / CI」。
+- ⚠️ **每次變更 `project.yml` 的套件版本後**，需在本機重新解析並更新版控的 `ci_scripts/Package.resolved`，否則 CI 沙箱無法解析（post-clone 不允許網路）。
+
+### 手動發佈（後援）
+
+- Xcode：Signing & Capabilities 勾自動簽章、選 Team；裝置選 `Any iOS Device (arm64)` → Archive → Distribute → Upload。
 
 ## 架構
 
