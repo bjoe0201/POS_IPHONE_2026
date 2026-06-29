@@ -219,15 +219,29 @@ struct OrderScreen: View {
 
     // MARK: - 底部結帳列
     private var checkoutBar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Button(action: { showDetail = true }) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(vm.selectedTable?.tableName ?? "尚未選桌")
-                        .font(.system(size: 13, weight: .bold)).foregroundColor(Theme.text)
-                    Text("\(vm.orderItems.count) 項 \(vm.itemCount) 件　明細 ›")
-                        .font(.system(size: 11)).foregroundColor(Theme.textMuted)
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(vm.selectedTable?.tableName ?? "尚未選桌")
+                            .font(.system(size: 13, weight: .bold)).foregroundColor(Theme.text)
+                        Text("\(vm.orderItems.count) 項 \(vm.itemCount) 件")
+                            .font(.system(size: 11)).foregroundColor(Theme.textMuted)
+                    }
+                    HStack(spacing: 4) {
+                        Image(systemName: "list.bullet.rectangle")
+                            .font(.system(size: 14, weight: .bold))
+                        Text("明細")
+                            .font(.system(size: 15, weight: .bold))
+                    }
+                    .foregroundColor(Theme.accent)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Theme.accentDim)
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.accent, lineWidth: 1.5))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
+            .buttonStyle(.plain)
             Spacer()
             Text(Formatters.money(vm.total))
                 .font(.system(size: 22, weight: .heavy)).foregroundColor(Theme.accent)

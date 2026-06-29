@@ -28,6 +28,10 @@ struct RepeatableButton<Label: View>: View {
                     }
                     .onEnded { _ in endPress() }
             )
+            // 若按鈕在按住中被移出畫面（例如數量歸 0 後「−／＋」按鈕消失），
+            // DragGesture 的 onEnded 不會觸發，repeatTask 會永遠跑下去造成持續振動與
+            // 連續呼叫 onTrigger。這裡在 onDisappear 強制結束按壓並取消任務。
+            .onDisappear { endPress() }
     }
 
     private func startPress() {

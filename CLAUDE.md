@@ -53,6 +53,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 - `CURRENT_PROJECT_VERSION`：Build 號，**每次上傳 TestFlight 必遞增**。
 - 改完務必 `xcodegen generate` 才會寫入專案。
 - 版本顯示於登入頁與設定頁（讀 `AppInfo`，來源為 Info.plist）。
+- 每次調版號請同步在 [`CHANGELOG.md`](CHANGELOG.md) 新增該版變更摘要，並更新 `README.md` 的「目前版本」。
 
 ## 發佈 / TestFlight（重點）
 
@@ -187,7 +188,7 @@ PIN（`pin_hash` / `is_default_pin`）、分頁開關（`tab_*_enabled`）、訂
 - 新增或修改 GRDB 記錄 / migration / Repository
 - 新增或修改 UserDefaults 設定鍵（`SettingsStore`）
 - 變更備份 / 還原或列印機制
-- 版號遞增（`project.yml` 的 `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`，並 `xcodegen generate`）
+- 版號遞增（`project.yml` 的 `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`，並 `xcodegen generate`），並於 [`CHANGELOG.md`](CHANGELOG.md) 記錄變更
 - 異動 `project.yml`（依賴、連結、權限）後務必 `xcodegen generate`
 
 ### 開發慣例提醒

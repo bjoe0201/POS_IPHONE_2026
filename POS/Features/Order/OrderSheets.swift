@@ -21,8 +21,20 @@ struct OrderDetailSheet: View {
                     }
                     Spacer()
                     if !vm.orderItems.isEmpty {
-                        Button("取消訂單", action: onCancelOrder)
-                            .font(.system(size: 12)).foregroundColor(Theme.textSub)
+                        Button(action: onCancelOrder) {
+                            HStack(spacing: 5) {
+                                Image(systemName: "trash")
+                                    .font(.system(size: 14, weight: .bold))
+                                Text("取消訂單")
+                                    .font(.system(size: 15, weight: .bold))
+                            }
+                            .foregroundColor(Theme.error)
+                            .padding(.horizontal, 14).padding(.vertical, 8)
+                            .background(Theme.error.opacity(0.12))
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.error.opacity(0.55), lineWidth: 1.5))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 16).padding(.vertical, 12)
