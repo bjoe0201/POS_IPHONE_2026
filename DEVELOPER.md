@@ -3,14 +3,16 @@
 火鍋店 POS iPhone 版的開發者文件：技術棧、建置、架構、資料庫、發佈與 TestFlight。
 使用者操作說明請見 [`README.md`](README.md)。
 
-> 文件版本：1.0.0；更新日期：2026-11-12（Asia/Taipei）。本次建立文件版號基準，保留既有內容。
+> 文件版本：1.0.1；更新日期：2026-11-12（Asia/Taipei）。
 
 ## 目前進度與交接
 
-- 2026-11-12：因 TestFlight 到期，保留 v1.0.1 功能，專案 build 由 4 遞增為 5，準備重新上傳。
+- 2026-11-12：因 TestFlight 到期，保留 v1.0.1 功能，專案 build 由 4 遞增為 5，已重新上傳為 TestFlight build 8。
 - 發佈採既有 main 分支 Xcode Cloud 工作流程；實際 TestFlight build 使用 Xcode Cloud 自動編號。
 - 驗證：XcodeGen 產生專案成功，Xcode 27.2 的 generic/platform=iOS Release 建置成功（CODE_SIGNING_ALLOWED=NO），鎖定套件未變更；未執行實機功能測試。
-- 上傳交接：App Store Connect 已確認舊版 v1.0.1（雲端 build 7）逾期；此次提交用於觸發 Xcode Cloud，仍須確認新 build 上傳與 ADM_POS／TESTER_POS 群組可用性。
+- 上傳交接：提交 `9272771` 已推送 main，Xcode Cloud build 8 的 Archive 與上傳成功。已依使用者明確確認儲存出口合規選項，並指派 ADM_POS（1 人）與 TESTER_POS（2 人）；App Store Connect 顯示 v1.0.1（8）「正在測試」、90 天後到期。原有測試者可在 TestFlight 更新，手機端實際更新仍由測試者驗證。
+- [TestFlight build 8](https://appstoreconnect.apple.com/teams/43035610-cd46-4687-9ad4-6ec50598a78c/apps/6783843634/testflight/ios/de945fff-1da2-4360-b5da-9052c5c52f5d)；[Xcode Cloud build 8](https://appstoreconnect.apple.com/teams/43035610-cd46-4687-9ad4-6ec50598a78c/xcode-cloud/products/8108E1CC-F638-45E2-BE94-3356273BE494/builds/648aa571-016c-4a08-90ea-9317bf02109b/summary)。
+- 雲端驗證：0 錯誤、2 項既有警告（POSApp.swift 的 try? 結果未使用、SDK macro table 編譯單元訊息）；未新增功能或變更相依套件。
 - 既有待辦：熱感印表機實機／中文列印驗證；跨平台備份仍暫停，均不屬本次重傳範圍。
 - 專案目前無 DEVELOP.md、PLANS/README.md、DOCS/README.md、HISTORY/README.md 或 SKILLS/README.md；此次沿用本文件記錄交接，未擴大初始化文件。
 
@@ -196,4 +198,5 @@ Apple 文件：[設定 Xcode Cloud build 編號](https://developer.apple.com/doc
 
 ## 文件修訂紀錄
 
+- 1.0.1（2026-11-12）：補齊雲端 build 8 建置／上傳成功、出口合規及兩個內部測試群組的最終驗收結果。
 - 1.0.0（2026-11-12）：建立文件版號基準，修正版本表並加入 TestFlight 到期重建進度、Xcode Cloud 編號說明與交接狀態。

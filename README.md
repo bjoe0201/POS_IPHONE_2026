@@ -6,7 +6,7 @@
 
 <p align="center">專為火鍋店與小型餐廳設計的 iPhone 點餐記帳 App，一支手機就能完成多桌點餐、收款、訂位與每日營業報表。</p>
 
-<p align="center">目前版本：<b>v1.0.1</b>（專案 build 5；TestFlight build 以 Xcode Cloud 為準）　｜　適用：iPhone（iOS 15 以上，含 iPhone 8）</p>
+<p align="center">目前版本：<b>v1.0.1</b>（TestFlight build 8／專案 build 5，2026-11-12 已開放內部測試）　｜　適用：iPhone（iOS 15 以上，含 iPhone 8）</p>
 
 ---
 

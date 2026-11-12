@@ -4,9 +4,13 @@
 
 ## Unreleased
 
-### 2026-11-12 — TestFlight 到期重建
-- 保留 v1.0.1 功能，將專案 build 由 4 遞增為 5，準備透過既有 Xcode Cloud 流程重新建置及上傳。
-- Xcode Cloud 會另行遞增上傳 build，實際 TestFlight build 與可測試狀態以 App Store Connect 為準。
+目前無未發佈變更。
+
+## v1.0.1（TestFlight build 8／專案 build 5）— 2026-11-12
+
+- TestFlight 到期重建：保留 v1.0.1 功能，將專案 build 由 4 遞增為 5；已透過既有 Xcode Cloud 流程成功建置及上傳雲端 build 8。
+- 出口合規資訊與 ADM_POS／TESTER_POS 兩個內部群組指派均依使用者確認完成；App Store Connect 顯示「正在測試」、90 天後到期，共 3 位測試者。
+- 本機 iOS Release 與雲端 Archive 通過；未執行實機功能測試。
 - 同步 README 與技術文件的版本及交接資訊；未變更功能、資料庫與套件版本。
 
 ## v1.0.1 (build 4)
