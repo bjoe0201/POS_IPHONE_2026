@@ -2,6 +2,13 @@
 
 本檔記錄 iPhone 版 POS 的對外版本變更。版號格式為 `MARKETING_VERSION (build CURRENT_PROJECT_VERSION)`，於 `project.yml` 維護。
 
+## Unreleased
+
+### 2026-11-12 — TestFlight 到期重建
+- 保留 v1.0.1 功能，將專案 build 由 4 遞增為 5，準備透過既有 Xcode Cloud 流程重新建置及上傳。
+- Xcode Cloud 會另行遞增上傳 build，實際 TestFlight build 與可測試狀態以 App Store Connect 為準。
+- 同步 README 與技術文件的版本及交接資訊；未變更功能、資料庫與套件版本。
+
 ## v1.0.1 (build 4)
 
 ### 修正

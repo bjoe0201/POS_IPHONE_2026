@@ -3,6 +3,17 @@
 火鍋店 POS iPhone 版的開發者文件：技術棧、建置、架構、資料庫、發佈與 TestFlight。
 使用者操作說明請見 [`README.md`](README.md)。
 
+> 文件版本：1.0.0；更新日期：2026-11-12（Asia/Taipei）。本次建立文件版號基準，保留既有內容。
+
+## 目前進度與交接
+
+- 2026-11-12：因 TestFlight 到期，保留 v1.0.1 功能，專案 build 由 4 遞增為 5，準備重新上傳。
+- 發佈採既有 main 分支 Xcode Cloud 工作流程；實際 TestFlight build 使用 Xcode Cloud 自動編號。
+- 驗證：XcodeGen 產生專案成功，Xcode 27.2 的 generic/platform=iOS Release 建置成功（CODE_SIGNING_ALLOWED=NO），鎖定套件未變更；未執行實機功能測試。
+- 上傳交接：App Store Connect 已確認舊版 v1.0.1（雲端 build 7）逾期；此次提交用於觸發 Xcode Cloud，仍須確認新 build 上傳與 ADM_POS／TESTER_POS 群組可用性。
+- 既有待辦：熱感印表機實機／中文列印驗證；跨平台備份仍暫停，均不屬本次重傳範圍。
+- 專案目前無 DEVELOP.md、PLANS/README.md、DOCS/README.md、HISTORY/README.md 或 SKILLS/README.md；此次沿用本文件記錄交接，未擴大初始化文件。
+
 ---
 
 ## 技術棧
@@ -50,8 +61,8 @@ open POS_IPHONE_2026.xcodeproj
 | 設定 | 值 | 說明 |
 |------|----|------|
 | `PRODUCT_BUNDLE_IDENTIFIER` | `b2p.idv.tw.pos` | App 唯一識別碼（需在 Apple Developer 後台註冊） |
-| `MARKETING_VERSION` | `1.0.0` | 對外版本號 |
-| `CURRENT_PROJECT_VERSION` | `3` | Build 號，**每次上傳 TestFlight 需遞增** |
+| `MARKETING_VERSION` | `1.0.1` | 對外版本號 |
+| `CURRENT_PROJECT_VERSION` | `5` | 專案 Build 號；Xcode Cloud 上傳使用其自動編號 |
 | `ASSETCATALOG_COMPILER_APPICON_NAME` | `AppIcon` | App 圖示資產名稱 |
 
 ---
@@ -158,6 +169,10 @@ POS/Common/Util/ThermalPrinterManager.swift   # @Published 狀態、掃描/連�
 
 ## Xcode Cloud / CI
 
+主要發佈方式為推送 main 後觸發既有 Xcode Cloud workflow，執行 Archive 與 TestFlight 上傳。Xcode Cloud 的 build 編號與 `project.yml` 可不同；上傳後須於 App Store Connect 確認處理結果與測試群組可用性。
+
+Apple 文件：[設定 Xcode Cloud build 編號](https://developer.apple.com/documentation/xcode/setting-the-next-build-number-for-xcode-cloud-builds/)。
+
 `.xcodeproj` 由 XcodeGen 產生且不入版控，故 CI 需特別處理：
 
 - **`ci_scripts/ci_post_clone.sh`**（Xcode Cloud 標準鉤子）：clone 後 `brew install xcodegen` → `xcodegen generate` → 把版控副本 `ci_scripts/Package.resolved` 複製到 `…/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`。
@@ -178,3 +193,7 @@ POS/Common/Util/ThermalPrinterManager.swift   # @Published 狀態、掃描/連�
 - 跨平台備份互通（見上）為未來功能。
 - **熱感印表機只能在實機測試**：`XYSDK.a` 的 `arm64` 切片是 iOS 裝置版，無 `arm64-simulator` 切片，故 Apple Silicon Mac 的模擬器**無法連結**（`ld: building for 'iOS-simulator', but linking in object file … built for 'iOS'`）。請以 `generic/platform=iOS` 建置並在實機（如 iPhone 8）測試。Intel Mac 的模擬器可用 `x86_64` 切片。
 - **熱感印表機繁體中文**：目前送 ASCII 測試頁；中文需依印表機字碼表（Big5/GBK）處理，屬 P2，若亂碼再評估點陣方案。
+
+## 文件修訂紀錄
+
+- 1.0.0（2026-11-12）：建立文件版號基準，修正版本表並加入 TestFlight 到期重建進度、Xcode Cloud 編號說明與交接狀態。
